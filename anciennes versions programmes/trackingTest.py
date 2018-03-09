@@ -1,7 +1,7 @@
+import time
 import cv2
 import sys
 import numpy
-import time
 
 """
 for i in range(10):
@@ -17,7 +17,6 @@ face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt2.
 
 # Define an initial bounding box
 bbox = (287, 23, 86, 320)
-print(bbox)
 
 while True:
 
@@ -62,7 +61,7 @@ while True:
 
                 # ATTENTION !
                 """
-                    SI TRACKER CHANGÉ :
+                    SI TRACKER CHANGE :
                         -   MODIFIER CONDITION "facesDet !=" ? 
                         - ? par "()" si TLD
                         - ? par "0" et "facesDet" par "facesDet[0][0]" si KCF
