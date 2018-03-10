@@ -48,6 +48,9 @@ class tracking():
         self.yFaceCen = 0
         self.xDep = 0
         self.yDep = 0
+        self.nbImages = 0
+        self.oldNbImages = 0
+        self.tpsPre = time.time()
         
     def init_moteur(self):
         self.xValue = 90
@@ -132,6 +135,7 @@ class tracking():
 
     def afficher_image(self, frame):
         cv2.imshow(self.technique,frame)
+        self.add_image()
 
     def writing_image(self, frame):
         if(self.writing):
@@ -162,6 +166,20 @@ class tracking():
             return 14
         else:
             print('wrong value of "technique"')
+
+    def add_image(self):
+        self.nbImages += 1
+
+    def one_second(self):
+        diff  = time.time() - self.tpsPre
+        if(diff >= 1):
+            ecart = self.nbImages - self.oldNbImages
+            self.oldNbImages = self.nbImages
+            self.tpsPre = time.time()
+            return True, ecart
+        else:
+            return False, None
+    
 
 def admin_mode():
     paramText = ['TECHNIQUE', 'SHAPES', 'WRITING', 'WINDOW_MODE', 'AFFICHAGE DES FPS']

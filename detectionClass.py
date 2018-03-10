@@ -36,10 +36,6 @@ track.init_moteur()
 
 track.init_screen_values()
 
-nbImages = 0
-oldNbImages = 0
-tpsPre = time.time()
-
 while(True):
     frame, gray = track.image()
     
@@ -60,14 +56,10 @@ while(True):
     track.afficher_image(frame)
     track.writing_image(frame)
 
-    nbImages += 1
-                    
-    diff  = time.time() - tpsPre
-    if(diff >= 1):
-        if(affichageTps):
-            print(nbImages - oldNbImages)
-        oldNbImages = nbImages
-        tpsPre = time.time()
+    if(affichageTps):
+        is_true, ecart = track.one_second()
+        if(is_true):
+            print(ecart)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

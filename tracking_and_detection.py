@@ -12,14 +12,14 @@ while(not demarrage):
     print("Tapez 2 pour realiser une detection")
     value = input("Votre valeur ici : ")
 
-    technique, shapes, writing, window_mode = init()
+    technique, shapes, writing, window_mode, affichageTps = init()
     
     if(value == 1):
         technique = 'tracking'
     elif(value == 2):
         technique = 'detection'
     elif(value == 42):
-        technique, shapes, writing, window_mode = admin_mode()
+        technique, shapes, writing, window_mode, affichageTps = admin_mode()
     else:
         demarrage = False
         print("Votre valeur ne correspond a aucune de nos attentes, veuillez recommencer s'il vous plait")
@@ -34,10 +34,7 @@ track.init_screen_values()
 bbox = (287, 23, 86, 320)
 ec = 20
 
-tpsPre = time.time()
-nbImages = 0
-oldNbImages = 0
-
+print("detection")
 while True:
     frame, gray = track.image()
 
@@ -57,8 +54,14 @@ while True:
     track.afficher_image(frame)
     track.writing_image(frame)
 
+    if(affichageTps):
+        is_true, ecart = track.one_second()
+        if(is_true):
+            print(ecart)
+
     if(faces != () and technique == 'tracking'):
-        
+
+        print("tracking")
         bbox = tuple(faces[0])
         continuer = True
 
@@ -83,8 +86,8 @@ while True:
                 tracker = cv2.TrackerKCF_create()
                 ok = tracker.init(frame, bbox)
 
-                nbImages = 0
-                oldNbImages = 0
+                track.nbImages = 0
+                track.oldNbImages = 0
 
                 while True:
                     
@@ -103,7 +106,7 @@ while True:
                                 break
 
                     # Analyse if the tracker is still on the person every 10 images
-                    if(nbImages % 10 == 0 and ok):
+                    if(track.nbImages % 10 == 0 and ok):
                         grayROI = gray[int(bbox[1]-ec):int(bbox[1]+bbox[3]+ec), int(bbox[0]-ec):int(bbox[0]+bbox[2]+ec)]
                         facesDet = track.detect_faces(grayROI)
                         if(facesDet == ()):
@@ -135,13 +138,10 @@ while True:
                     track.afficher_image(frame)
                     track.writing_image(frame)
 
-                    nbImages += 1
-                    
-                    diff  = time.time() - tpsPre
-                    if(diff >= 1):
-                        print(nbImages - oldNbImages)
-                        oldNbImages = nbImages
-                        tpsPre = time.time()
+                    if(affichageTps):
+                        is_true, ecart = track.one_second()
+                        if(is_true):
+                            print(ecart)
              
                     if cv2.waitKey(1) & 0xff == ord('q') :
                         break
@@ -150,5 +150,4 @@ while True:
         break
 
 
-video.release()
-cv2.destroyAllWindows()
+track.release_all()
