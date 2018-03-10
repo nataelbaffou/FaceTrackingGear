@@ -11,14 +11,12 @@ Ce repository contient les programmes du projet FaceTrackingGear:
     c. Relier la caméra à l'ordinateur
     d. Relier la carte arduino a l'ordinateur
 2. Uploader le fichier commandesPython.ino sur la carte arduino
-3. Positionner les fichiers trackingCamera.py, detectionCamera.py et commandesPython.py dans le même dossier
+3. Positionner les fichiers tracking_and_detection.py et commandesPython.py dans le même dossier
 
 #### LANCEMENT ####
 
-trackingCamera.py et detectionCamera.py sont les deux fichiers à lancer pour faire fonctionner la caméra.
+1. Lancer le fichier tracking_and_detection.py avec python.exe
 
-Lancer l'un des deux avec python.
+2. Choisir l'un des deux modes présents (tracking ou detection) ou tapez 42 pour pouvoir déterminer l'intégralité des paramètres.
 
-Choisir si l'on veut afficher un visuel ou non (oui : 1 ; non : 2)
-
-Laissez vous filmer par la caméra et profiter ! ;)
+3. Laissez vous filmer par la caméra et profitez ! ;)
