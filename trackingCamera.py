@@ -24,7 +24,6 @@ fourcc = cv2.VideoWriter_fourcc(*'XVID')
 
 dateNow = datetime.now()
 date = str(dateNow.day) + "-" + str(dateNow.hour) + "-" + str(dateNow.minute)
-number = dateNow.hour
 writer = cv2.VideoWriter("videos/projet-track-"+str(date)+".avi", fourcc, 25.0, (640, 480))
 
 face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt2.xml')
