@@ -12,19 +12,19 @@ while(not demarrage):
     print("Tapez 2 pour realiser une detection")
     value = input("Votre valeur ici : ")
 
-    technique, shapes, writing, window_mode, affichageTps = init()
+    technique, shapes, writing, window_mode, affichageTps, rect_height, rect_width = init()
     
     if(value == 1):
         technique = 'tracking'
     elif(value == 2):
         technique = 'detection'
     elif(value == 42):
-        technique, shapes, writing, window_mode, affichageTps = admin_mode()
+        technique, shapes, writing, window_mode, affichageTps, rect_height, rect_width = admin_mode()
     else:
         demarrage = False
         print("Votre valeur ne correspond a aucune de nos attentes, veuillez recommencer s'il vous plait")
 
-track = tracking('COM3', technique, window_mode, shapes, writing)
+track = tracking('COM3', technique, window_mode, shapes, writing, rect_height, rect_width)
 
 track.init_moteur()
 

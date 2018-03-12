@@ -4,7 +4,7 @@ import cv2
 from commandesPython import Arduino
 
 def init():
-    return 'tracking', False, False, cv2.WINDOW_NORMAL, False
+    return 'tracking', False, False, cv2.WINDOW_NORMAL, False, 15, 10
 
 """
     Creation of tracking:
@@ -16,7 +16,7 @@ def init():
 """
 
 class tracking():
-    def __init__(self, port, technique, window_mode, shapes, writing):
+    def __init__(self, port, technique, window_mode, shapes, writing, rect_height, rect_width):
         self.technique = technique
         self.shapes = shapes
         self.writing = writing
@@ -69,8 +69,8 @@ class tracking():
         self.xScrCen = int(self.width/2)
         self.yScrLim = int(self.yScrCen/2)
         self.xScrLim = int(self.xScrCen/2)
-        self.yScrSaf = int(self.height/15)
-        self.xScrSaf = int(self.width/10)
+        self.yScrSaf = int(self.height/rect_height)
+        self.xScrSaf = int(self.width/rect_width)
 
     def image(self):
         _, frame = self.cap.read()
@@ -182,7 +182,7 @@ class tracking():
     
 
 def admin_mode():
-    paramText = ['TECHNIQUE', 'SHAPES', 'WRITING', 'WINDOW_MODE', 'AFFICHAGE DES FPS']
+    paramText = ['TECHNIQUE', 'SHAPES', 'WRITING', 'WINDOW_MODE', 'AFFICHAGE DES FPS', 'TAILLE RECTANGLE HEIGHT', 'TAILLE RECTANGLE WIDTH']
     modif = [['tracking', 'detection'], [False, True], [False, True], [cv2.WINDOW_NORMAL, cv2.WINDOW_AUTOSIZE], [False, True]]
     param = list(init())
     print("\n\n#######   ATTENTION   #######\n\nVous venez d'entrer dans le mode administrateur !!")
@@ -194,31 +194,54 @@ def admin_mode():
         param[0] = 'detection'
     while(continuer):
         print("\n\nVous pouvez modifier les parametres suivants :\n")
-        print("     - [1] technique :   {}\n     - [2] shapes :      {}\n     - [3] writing :     {}\n     - [4] window_mode : {}\n     - [5] affich fps :  {}\n".format(param[0], param[1], param[2], param[3], param[4]))
+        print("     - [1] technique :   {}\n"\
+            + "     - [2] shapes :      {}\n"\
+            + "     - [3] writing :     {}\n"\
+            + "     - [4] window_mode : {}\n"\
+            + "     - [5] affich fps :  {}\n"\
+            + "     - [_] taille rect :\n"\
+            + "             - [6] height : {}\n"\
+            + "             - [7] width  : {}\n".format(param[0], param[1], param[2], param[3], param[4], param[5], param[6]))
         choice = input("\n(Tapez le chiffre correspondant ou '0' pour quitter)\nQuelle valeur voulez-vous modifier ? : ")
         if(choice == 0):
             continuer = False
-        elif(choice != 1 and choice != 2 and choice != 3 and choice != 4 and choice != 5):
+        elif(int(choice) >= 1 and int(choice) <= 7):
             print("\n\nLa valeur ecrite ne correspond a aucune des valeurs demandees, veuillez recommencer")
         else:
             print("\n\n#######   MODIFICATION DE '{}'   #######\n\n".format(paramText[choice-1]))
-            print("Ce parametre peut prendre les valeurs suivantes : \n")
-            if(choice == 1):
-                print("     - [0] tracking mode\n     - [1] detection mode")
-            elif(choice == 2):
-                print("     - [0] image without shapes\n     - [1] image with shapes")
-            elif(choice == 3):
-                print("     - [0] doesn't write the file\n     - [1] write the file")
-            elif(choice == 4):
-                print("     - [0] normal window (resizable)\n     - [1] autosize window (not resizable)")
-            elif(choice == 5):
-                print("     - [0] doesn't print the number of images per second\n     - [1] print the number of images per second")
+            if(choice == 6 or choice == 7):
+                mot = choice == 6 and 'hauteur' or 'largeur'
+                print("     - Entrez n'importe quelle valeur entiere positive, elle divisera la " + mot)
 
-            value = input("\n\nVotre choix : ")
+                value = int(input("\n\nVotre choix : "))
 
-            print("\nAncienne valeur du parametre '{2}' : '{0}'\nNouvelle valeur du parametre '{2}' : '{1}'".format(param[choice-1], modif[choice-1][value], paramText[choice-1].lower()))
-            param[choice-1] = modif[choice-1][value]
+                print("\nAncienne valeur du parametre '{2}' : '{0}'\nNouvelle valeur du parametre '{2}' : '{1}'".format(param[choice-1], value, paramText[choice-1].lower()))
+                param[choice-1] = value
+            else:
+                print("Ce parametre peut prendre les valeurs suivantes : \n")
+                if(choice == 1):
+                    print("     - [0] tracking mode\n     - [1] detection mode")
+                elif(choice == 2):
+                    print("     - [0] image without shapes\n     - [1] image with shapes")
+                elif(choice == 3):
+                    print("     - [0] doesn't write the file\n     - [1] write the file")
+                elif(choice == 4):
+                    print("     - [0] normal window (resizable)\n     - [1] autosize window (not resizable)")
+                elif(choice == 5):
+                    print("     - [0] doesn't print the number of images per second\n     - [1] print the number of images per second")
+                value = input("\n\nVotre choix : ")
 
-    print("\n\nValeurs finales des parametres :\n     - technique : {}\n     - shapes : {}\n     - writing : {}\n     - window_mode : {}\n     - affich fps :  {}\n".format(param[0], param[1], param[2], param[3], param[4]))
-    
+                print("\nAncienne valeur du parametre '{2}' : '{0}'\nNouvelle valeur du parametre '{2}' : '{1}'".format(param[choice-1], modif[choice-1][value], paramText[choice-1].lower()))
+                param[choice-1] = modif[choice-1][value]
+
+    print("\n\nValeurs finales des parametres :\n"\
+        + "     - technique :   {}\n"\
+        + "     - shapes :      {}\n"\
+        + "     - writing :     {}\n"\
+        + "     - window_mode : {}\n"\
+        + "     - affich fps :  {}\n"
+        + "     - taille rect :\n"\
+        + "             - height : {}\n"\
+        + "             - width  : {}\n".format(param[0], param[1], param[2], param[3], param[4], param[5], param[6]))
+
     return param
