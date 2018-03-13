@@ -20,6 +20,8 @@ class tracking():
         self.technique = technique
         self.shapes = shapes
         self.writing = writing
+        self.rect_height = rect_height
+        self.rect_width = rect_width
         
         self.ard = Arduino(port)
         print('access port available')
@@ -40,8 +42,8 @@ class tracking():
         self.width = 0
         self.yScrCen = 0
         self.xScrCen = 0
-        self.yScrLim = 0
-        self.xScrLim = 0
+        #self.yScrLim = 0
+        #self.xScrLim = 0
         self.yScrSaf = 0
         self.xScrSaf = 0
         self.xFaceCen = 0
@@ -67,10 +69,10 @@ class tracking():
         
         self.yScrCen = int(self.height/2)
         self.xScrCen = int(self.width/2)
-        self.yScrLim = int(self.yScrCen/2)
-        self.xScrLim = int(self.xScrCen/2)
-        self.yScrSaf = int(self.height/rect_height)
-        self.xScrSaf = int(self.width/rect_width)
+        #self.yScrLim = int(self.yScrCen/2)
+        #self.xScrLim = int(self.xScrCen/2)
+        self.yScrSaf = int(self.height/self.rect_height)
+        self.xScrSaf = int(self.width/self.rect_width)
 
     def image(self):
         _, frame = self.cap.read()
@@ -124,10 +126,10 @@ class tracking():
         if(self.shapes):
             cv2.line(frame, (0, self.yScrCen), (self.width, self.yScrCen), (0,0,0), 2)
             cv2.line(frame, (self.xScrCen, 0), (self.xScrCen, self.height), (0,0,0), 2)
-            cv2.line(frame, (self.xScrLim, self.yScrLim), (self.xScrLim, self.height-self.yScrLim), (0,0,0), 4)
-            cv2.line(frame, (self.xScrLim, self.yScrLim), (self.width-self.xScrLim, self.yScrLim), (0,0,0), 4)
-            cv2.line(frame, (self.width-self.xScrLim, self.height-self.yScrLim), (self.xScrLim, self.height-self.yScrLim), (0,0,0), 4)
-            cv2.line(frame, (self.width-self.xScrLim, self.height-self.yScrLim), (self.width-self.xScrLim, self.yScrLim), (0,0,0), 4)
+            #cv2.line(frame, (self.xScrLim, self.yScrLim), (self.xScrLim, self.height-self.yScrLim), (0,0,0), 4)
+            #cv2.line(frame, (self.xScrLim, self.yScrLim), (self.width-self.xScrLim, self.yScrLim), (0,0,0), 4)
+            #cv2.line(frame, (self.width-self.xScrLim, self.height-self.yScrLim), (self.xScrLim, self.height-self.yScrLim), (0,0,0), 4)
+            #cv2.line(frame, (self.width-self.xScrLim, self.height-self.yScrLim), (self.width-self.xScrLim, self.yScrLim), (0,0,0), 4)
             cv2.line(frame, (self.xScrCen - self.xScrSaf, self.yScrCen - self.yScrSaf), (self.xScrCen + self.xScrSaf, self.yScrCen - self.yScrSaf), (0,0,0), 2)
             cv2.line(frame, (self.xScrCen - self.xScrSaf, self.yScrCen + self.yScrSaf), (self.xScrCen + self.xScrSaf, self.yScrCen + self.yScrSaf), (0,0,0), 2)
             cv2.line(frame, (self.xScrCen - self.xScrSaf, self.yScrCen - self.yScrSaf), (self.xScrCen - self.xScrSaf, self.yScrCen + self.yScrSaf), (0,0,0), 2)
@@ -202,10 +204,10 @@ def admin_mode():
             + "     - [_] taille rect :\n"\
             + "             - [6] height : {}\n"\
             + "             - [7] width  : {}\n".format(param[0], param[1], param[2], param[3], param[4], param[5], param[6]))
-        choice = input("\n(Tapez le chiffre correspondant ou '0' pour quitter)\nQuelle valeur voulez-vous modifier ? : ")
+        choice = int(input("\n(Tapez le chiffre correspondant ou '0' pour quitter)\nQuelle valeur voulez-vous modifier ? : "))
         if(choice == 0):
             continuer = False
-        elif(int(choice) >= 1 and int(choice) <= 7):
+        elif(choice < 1 or choice > 7):
             print("\n\nLa valeur ecrite ne correspond a aucune des valeurs demandees, veuillez recommencer")
         else:
             print("\n\n#######   MODIFICATION DE '{}'   #######\n\n".format(paramText[choice-1]))
