@@ -4,7 +4,7 @@ import cv2
 from commandesPython import Arduino
 
 def init():
-    return 'tracking', False, False, cv2.WINDOW_NORMAL, False, 15, 10
+    return 'tracking', False, False, cv2.WINDOW_NORMAL, False, 20, 15
 
 """
     Creation of tracking:
@@ -196,14 +196,14 @@ def admin_mode():
         param[0] = 'detection'
     while(continuer):
         print("\n\nVous pouvez modifier les parametres suivants :\n")
-        print("     - [1] technique :   {}\n"\
-            + "     - [2] shapes :      {}\n"\
-            + "     - [3] writing :     {}\n"\
-            + "     - [4] window_mode : {}\n"\
-            + "     - [5] affich fps :  {}\n"\
+        print("     - [1] technique :   {}\n".format(param[0])\
+            + "     - [2] shapes :      {}\n".format(param[1])\
+            + "     - [3] writing :     {}\n".format(param[2])\
+            + "     - [4] window_mode : {}\n".format(param[3])\
+            + "     - [5] affich fps :  {}\n".format(param[4])\
             + "     - [_] taille rect :\n"\
-            + "             - [6] height : {}\n"\
-            + "             - [7] width  : {}\n".format(param[0], param[1], param[2], param[3], param[4], param[5], param[6]))
+            + "             - [6] height : {}\n".format(param[5])\
+            + "             - [7] width  : {}\n".format(param[6]))
         choice = int(input("\n(Tapez le chiffre correspondant ou '0' pour quitter)\nQuelle valeur voulez-vous modifier ? : "))
         if(choice == 0):
             continuer = False
@@ -237,13 +237,13 @@ def admin_mode():
                 param[choice-1] = modif[choice-1][value]
 
     print("\n\nValeurs finales des parametres :\n"\
-        + "     - technique :   {}\n"\
-        + "     - shapes :      {}\n"\
-        + "     - writing :     {}\n"\
-        + "     - window_mode : {}\n"\
-        + "     - affich fps :  {}\n"
+        + "     - technique :   {}\n".format(param[0])\
+        + "     - shapes :      {}\n".format(param[1])\
+        + "     - writing :     {}\n".format(param[2])\
+        + "     - window_mode : {}\n".format(param[3])\
+        + "     - affich fps :  {}\n".format(param[4])\
         + "     - taille rect :\n"\
-        + "             - height : {}\n"\
-        + "             - width  : {}\n".format(param[0], param[1], param[2], param[3], param[4], param[5], param[6]))
+        + "             - height : {}\n".format(param[5])\
+        + "             - width  : {}\n".format(param[6]))
 
     return param
