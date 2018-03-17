@@ -42,8 +42,6 @@ class tracking():
         self.width = 0
         self.yScrCen = 0
         self.xScrCen = 0
-        #self.yScrLim = 0
-        #self.xScrLim = 0
         self.yScrSaf = 0
         self.xScrSaf = 0
         self.xFaceCen = 0
@@ -69,8 +67,6 @@ class tracking():
         
         self.yScrCen = int(self.height/2)
         self.xScrCen = int(self.width/2)
-        #self.yScrLim = int(self.yScrCen/2)
-        #self.xScrLim = int(self.xScrCen/2)
         self.yScrSaf = int(self.height/self.rect_height)
         self.xScrSaf = int(self.width/self.rect_width)
 
@@ -126,10 +122,6 @@ class tracking():
         if(self.shapes):
             cv2.line(frame, (0, self.yScrCen), (self.width, self.yScrCen), (0,0,0), 2)
             cv2.line(frame, (self.xScrCen, 0), (self.xScrCen, self.height), (0,0,0), 2)
-            #cv2.line(frame, (self.xScrLim, self.yScrLim), (self.xScrLim, self.height-self.yScrLim), (0,0,0), 4)
-            #cv2.line(frame, (self.xScrLim, self.yScrLim), (self.width-self.xScrLim, self.yScrLim), (0,0,0), 4)
-            #cv2.line(frame, (self.width-self.xScrLim, self.height-self.yScrLim), (self.xScrLim, self.height-self.yScrLim), (0,0,0), 4)
-            #cv2.line(frame, (self.width-self.xScrLim, self.height-self.yScrLim), (self.width-self.xScrLim, self.yScrLim), (0,0,0), 4)
             cv2.line(frame, (self.xScrCen - self.xScrSaf, self.yScrCen - self.yScrSaf), (self.xScrCen + self.xScrSaf, self.yScrCen - self.yScrSaf), (0,0,0), 2)
             cv2.line(frame, (self.xScrCen - self.xScrSaf, self.yScrCen + self.yScrSaf), (self.xScrCen + self.xScrSaf, self.yScrCen + self.yScrSaf), (0,0,0), 2)
             cv2.line(frame, (self.xScrCen - self.xScrSaf, self.yScrCen - self.yScrSaf), (self.xScrCen - self.xScrSaf, self.yScrCen + self.yScrSaf), (0,0,0), 2)

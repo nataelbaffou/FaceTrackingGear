@@ -10,11 +10,16 @@ ard = Arduino(port)
 
 print('access port available')
 
-xValue = 90
-yValue = 90
+test = 0
+
+xValue = test
+yValue = test
 ard.servoAttach(1, 6)
 ard.servoAttach(2, 7)
 ard.servoWrite(1, xValue)
 ard.servoWrite(2, yValue)
 
 ard.close()
+
+print("finished succefully")
+time.sleep(2)
