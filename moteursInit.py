@@ -10,7 +10,7 @@ ard = Arduino(port)
 
 print('access port available')
 
-test = 0
+test = 90
 
 xValue = test
 yValue = test
