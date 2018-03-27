@@ -100,14 +100,14 @@ class tracking():
             self.xValue -= self.xDep
             if(self.xValue < 0):
                 self.xValue = 0
-        if(self.yScrCen - self.yScrSaf > self.yFaceCen):
+        if(self.yScrCen + self.yScrSaf < self.yFaceCen):
             self.yValue -= self.yDep
             if(self.yValue < 65):
                 self.yValue = 65
-        if(self.yScrSaf + self.yScrCen < self.yFaceCen):
+        if(self.yScrCen - self.yScrSaf > self.yFaceCen):
             self.yValue += self.yDep
-            if(self.yValue > 180):
-                self.yValue = 180
+            if(self.yValue > 100):
+                self.yValue = 100
 
         self.ard.servoWrite(1, self.xValue)
         self.ard.servoWrite(2, self.yValue)
