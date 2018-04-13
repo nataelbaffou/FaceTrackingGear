@@ -24,6 +24,7 @@ class Arduino():
         self.SERVO_WRITE = 105
         self.SERVO_READ = 106
         self.SERVO_ATTACH = 107
+        self.MAPPING = 108
         self.INPUT = 0
         self.OUTPUT = 1
         self.LOW = 0
@@ -69,6 +70,10 @@ class Arduino():
         self.ser.write(chr(self.SERVO_ATTACH))
         self.ser.write(chr(numServo))
         self.ser.write(chr(pin))
+
+    def mapping(self, duree):
+        self.ser.write(chr(self.MAPPING))
+        self.ser.write(chr(duree))
         
  
                 
