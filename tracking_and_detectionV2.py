@@ -49,7 +49,7 @@ while True:
                 
         track.moove_camera()
 
-    track.add_lines(frame)
+    #track.add_lines(frame)
     
     track.afficher_image(frame)
     track.writing_image(frame)
@@ -133,7 +133,7 @@ while True:
 
                         track.moove_camera()
 
-                    track.add_lines(frame)
+                    #track.add_lines(frame)
 
                     track.afficher_image(frame)
                     track.writing_image(frame)

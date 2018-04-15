@@ -7,11 +7,15 @@
 #define SERVO_WRITE 105
 #define SERVO_READ 106
 #define SERVO_ATTACH 107
+#define MAPPING 108
 
 #include <Servo.h>
 
 Servo monservo;
 Servo monservo2;
+
+unsigned long startTimestamp;
+unsigned long timePosition;
               
 void setup() {
   char c;
@@ -36,8 +40,23 @@ void loop() {
      else if (commande==ANALOG_READ) commande_analog_read();
      else if (commande==SERVO_WRITE) commande_servo_write();
      else if (commande==SERVO_ATTACH) commande_servo_attach();
+     else if (commande==MAPPING) commande_mapping();
   }
   // autres actions à placer ici
+}
+
+void commande_mapping() {
+    int duree;
+    while (Serial.available()<1);
+    duree = Serial.read();
+    startTimestamp = millis();
+    timePosition = 0;
+    while(timePosition < duree)
+    {
+      timePosition = int((millis() - startTimestamp));
+      long angle = map(timePosition, 0, duree, 0, 180);
+      servo1.write(angle);
+    }
 }
               
 void commande_pin_mode() {

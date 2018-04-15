@@ -3,8 +3,12 @@ from datetime import datetime
 import cv2
 from commandesPython import Arduino
 
+YLIMIT = 20
+deFace = False
+
 def init():
-    return 'tracking', False, False, cv2.WINDOW_NORMAL, False, 20, 15
+    #       technique / shapes / writing / window_mode /  fps / heigth / width
+    return 'tracking', True,   False,  cv2.WINDOW_NORMAL, False, 20, 15
 
 """
     Creation of tracking:
@@ -62,9 +66,10 @@ class tracking():
         print('moteur initialisation succeeded')
 
     def init_screen_values(self):
-        frame, _ = self.image()
+        _, frame = self.cap.read()
         self.height, self.width = frame.shape[:2]
-        
+        self.height = int(self.height/1)
+        self.width = int(self.width/1)
         self.yScrCen = int(self.height/2)
         self.xScrCen = int(self.width/2)
         self.yScrSaf = int(self.height/self.rect_height)
@@ -73,6 +78,8 @@ class tracking():
     def image(self):
         _, frame = self.cap.read()
         frame = cv2.flip(frame, 1)
+        size = (self.width, self.height)
+        #frame = cv2.resize(frame, size, interpolation = 3)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         return (frame, gray)
 
@@ -88,8 +95,8 @@ class tracking():
         xEcart = abs(self.xScrCen - self.xFaceCen) - self.xScrSaf
         yEcart = abs(self.yScrCen - self.yFaceCen) - self.yScrSaf
 
-        self.xDep = int(xEcart / 100) + 1
-        self.yDep = int(yEcart /100) + 1
+        self.xDep = int(xEcart / 50) + 1
+        self.yDep = int(yEcart /50) + 1
 
     def moove_camera(self):
         if(self.xScrCen - self.xScrSaf > self.xFaceCen):
@@ -102,12 +109,12 @@ class tracking():
                 self.xValue = 0
         if(self.yScrCen + self.yScrSaf < self.yFaceCen):
             self.yValue -= self.yDep
-            if(self.yValue < 65):
-                self.yValue = 65
+            if(self.yValue < 90-YLIMIT):
+                self.yValue = 90-YLIMIT
         if(self.yScrCen - self.yScrSaf > self.yFaceCen):
             self.yValue += self.yDep
-            if(self.yValue > 100):
-                self.yValue = 100
+            if(self.yValue > 90+YLIMIT):
+                self.yValue = 90+YLIMIT
 
         self.ard.servoWrite(1, self.xValue)
         self.ard.servoWrite(2, self.yValue)
@@ -115,8 +122,8 @@ class tracking():
     def add_face_lines(self, frame, x, y, w, h):
         if(self.shapes):
             cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
-            cv2.line(frame, (self.xFaceCen-10, self.yFaceCen), (self.xFaceCen+10, self.yFaceCen), (0,255,0), 4)
-            cv2.line(frame, (self.xFaceCen, self.yFaceCen-10), (self.xFaceCen, self.yFaceCen+10), (0,255,0), 4)
+            #cv2.line(frame, (self.xFaceCen-10, self.yFaceCen), (self.xFaceCen+10, self.yFaceCen), (0,255,0), 4)
+            #cv2.line(frame, (self.xFaceCen, self.yFaceCen-10), (self.xFaceCen, self.yFaceCen+10), (0,255,0), 4)
             
     def add_lines(self, frame):
         if(self.shapes):
@@ -128,6 +135,8 @@ class tracking():
             cv2.line(frame, (self.xScrCen + self.xScrSaf, self.yScrCen - self.yScrSaf), (self.xScrCen + self.xScrSaf, self.yScrCen + self.yScrSaf), (0,0,0), 2)
 
     def afficher_image(self, frame):
+        if(deFace):
+            frame = cv2.flip(frame, 1)
         cv2.imshow(self.technique,frame)
         self.add_image()
 
