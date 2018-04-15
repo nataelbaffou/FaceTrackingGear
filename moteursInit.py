@@ -5,7 +5,7 @@ from commandesPython import Arduino
 #time.sleep(5)
 print("starting")
 
-port = 'COM3'
+port = 'COM5'
 ard = Arduino(port)
 
 print('access port available')

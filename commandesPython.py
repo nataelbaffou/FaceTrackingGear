@@ -71,9 +71,14 @@ class Arduino():
         self.ser.write(chr(numServo))
         self.ser.write(chr(pin))
 
-    def mapping(self, duree):
+    def mapping(self, ecart):
         self.ser.write(chr(self.MAPPING))
-        self.ser.write(chr(duree))
+        precVal = 0
+        for i in range(5):
+            nb = 10**(5-i-1)
+            newVal = int((ecart - precVal)/nb)
+            precVal = precVal + newVal * nb
+            self.ser.write(chr(newVal))
         
  
                 

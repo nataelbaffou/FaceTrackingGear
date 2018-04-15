@@ -15,7 +15,14 @@ Servo monservo;
 Servo monservo2;
 
 unsigned long startTimestamp;
-unsigned long timePosition;
+unsigned long timePos;
+int ecart = 0;
+long maxDist = log(PI+1);
+long dist = 0;
+long vitesse = 0;
+long tps = 0;
+long angle = 0;
+long angleDep =0;
               
 void setup() {
   char c;
@@ -33,16 +40,27 @@ void loop() {
   char commande;  
   if (Serial.available()>0) {
      commande = Serial.read();
-     if (commande==PIN_MODE) commande_pin_mode();
-     else if (commande==DIGITAL_WRITE) commande_digital_write();
-     else if (commande==DIGITAL_READ) commande_digital_read();
-     else if (commande==ANALOG_WRITE) commande_analog_write();
-     else if (commande==ANALOG_READ) commande_analog_read();
+     if (commande==MAPPING){
+        ecart = 0;
+        for(int i=0; i<5; i++)
+        {
+          while (Serial.available()<1);
+          ecart = ecart + Serial.read() * pow(10, 5-i) / 10;
+        }
+        ecart = 100;
+        dist = map(ecart, 0, 240, 0, maxDist);
+        vitesse = exp(dist) - 1;
+        tps = (dist + vitesse)*1000;
+        startTimestamp = millis();
+        angleDep = angle;
+     }
      else if (commande==SERVO_WRITE) commande_servo_write();
      else if (commande==SERVO_ATTACH) commande_servo_attach();
-     else if (commande==MAPPING) commande_mapping();
+     
   }
-  // autres actions à placer ici
+  timePos = int((millis() - startTimestamp));
+  angle = map(timePos, 0, tps, angleDep, angleDep + 40);
+  monservo.write(angle);
 }
 
 void commande_mapping() {
@@ -53,11 +71,11 @@ void commande_mapping() {
       duree = duree + Serial.read() * pow(10, 5-i) / 10;
     }
     startTimestamp = millis();
-    timePosition = 0;
-    while(timePosition < duree)
+    timePos = 0;
+    while(timePos < duree)
     {
-      timePosition = int((millis() - startTimestamp));
-      long angle = map(timePosition, 0, duree, 0, 180);
+      timePos = int((millis() - startTimestamp));
+      long angle = map(timePos, 0, duree, 0, 180);
       monservo.write(angle);
     }
 }
