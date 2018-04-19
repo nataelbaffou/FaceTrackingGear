@@ -5,6 +5,8 @@ from commandesPython import Arduino
 #time.sleep(5)
 print("starting")
 
+# 480 / 640
+
 port = 'COM3'
 ard = Arduino(port)
 

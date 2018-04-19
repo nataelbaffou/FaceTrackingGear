@@ -40,26 +40,8 @@ void loop() {
      else if (commande==ANALOG_READ) commande_analog_read();
      else if (commande==SERVO_WRITE) commande_servo_write();
      else if (commande==SERVO_ATTACH) commande_servo_attach();
-     else if (commande==MAPPING) commande_mapping();
   }
   // autres actions à placer ici
-}
-
-void commande_mapping() {
-    int duree = 0;
-    for(int i=0; i<5; i++)
-    {
-      while (Serial.available()<1);
-      duree = duree + Serial.read() * pow(10, 5-i) / 10;
-    }
-    startTimestamp = millis();
-    timePosition = 0;
-    while(timePosition < duree)
-    {
-      timePosition = int((millis() - startTimestamp));
-      long angle = map(timePosition, 0, duree, 0, 180);
-      monservo.write(angle);
-    }
 }
               
 void commande_pin_mode() {

@@ -3,7 +3,7 @@ from datetime import datetime
 import cv2
 from commandesPython import Arduino
 
-YLIMIT = 50
+YLIMIT = 20
 deFace = False
 
 def init():
@@ -92,13 +92,19 @@ class tracking():
         self.yFaceCen = y + int(h/2)
 
     def calcul_deplacement(self):
-        xEcart = abs(self.xScrCen - self.xFaceCen) - self.xScrSaf
-        yEcart = abs(self.yScrCen - self.yFaceCen) - self.yScrSaf
+        xEcart = abs(self.xScrCen - self.xFaceCen)
+        # - self.xScrSaf
+        yEcart = abs(self.yScrCen - self.yFaceCen)
+        # - self.yScrSaf
 
         self.xDep = int(xEcart / 50) + 1
         self.yDep = int(yEcart /50) + 1
 
+        self.xDep = xEcart
+        self.yDep = yEcart
+
     def moove_camera(self):
+        """
         if(self.xScrCen - self.xScrSaf > self.xFaceCen):
             self.xValue += self.xDep
             if(self.xValue > 180):
@@ -118,6 +124,15 @@ class tracking():
 
         self.ard.servoWrite(1, self.xValue)
         self.ard.servoWrite(2, self.yValue)
+        """
+        invX = 1
+        invY = 1
+        if(self.xScrCen < self.xFaceCen):
+            invX = 0
+        if(self.yScrCen < self.yFaceCen):
+            invY = 0
+        self.ard.mapping(self.xDep, self.yDep, invX, invY)
+        
 
     def add_face_lines(self, frame, x, y, w, h):
         if(self.shapes):

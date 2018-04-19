@@ -16,13 +16,18 @@ Servo monservo2;
 
 unsigned long startTimestamp;
 unsigned long timePos;
-int ecart = 0;
-long maxDist = log(PI+1);
-long dist = 0;
-long vitesse = 0;
-long tps = 0;
-long angle = 0;
-long angleDep =0;
+int ecartX = 0;
+int ecartY = 0;
+long distX = 0;
+long distY = 0;
+long tempsX = 0;
+long tempsY = 0;
+long angleX = 90;
+long angleY = 90;
+long angleDepX = 0;
+long angleDepY = 0;
+int invX = 1;
+int invY = 1;
               
 void setup() {
   char c;
@@ -40,44 +45,59 @@ void loop() {
   char commande;  
   if (Serial.available()>0) {
      commande = Serial.read();
-     if (commande==MAPPING){
-        ecart = 0;
-        for(int i=0; i<5; i++)
-        {
-          while (Serial.available()<1);
-          ecart = ecart + Serial.read() * pow(10, 5-i) / 10;
-        }
-        ecart = 100;
-        dist = map(ecart, 0, 240, 0, maxDist);
-        vitesse = exp(dist) - 1;
-        tps = (dist + vitesse)*1000;
-        startTimestamp = millis();
-        angleDep = angle;
-     }
+     if (commande==MAPPING)commande_mapping();
      else if (commande==SERVO_WRITE) commande_servo_write();
      else if (commande==SERVO_ATTACH) commande_servo_attach();
      
   }
-  timePos = int((millis() - startTimestamp));
-  angle = map(timePos, 0, tps, angleDep, angleDep + 40);
-  monservo.write(angle);
+  if(0){
+      timePos = int((millis() - startTimestamp));
+      if(invX == 1){
+        angleX = map(timePos, 0, tempsX*1000, angleDepX, angleDepX + 90);
+      }
+      else{
+        angleX = map(timePos, 0, tempsX*1000, angleDepX, angleDepX - 90);
+      }
+      monservo.write(angleX);
+      if(invY == 1){
+        angleY = map(timePos, 0, tempsY*1000, angleDepY, angleDepY + 90);
+      }
+      else{
+        angleY = map(timePos, 0, tempsY*1000, angleDepY, angleDepY - 90);
+      }
+      monservo2.write(angleY);
+  }
+  
 }
 
 void commande_mapping() {
-    int duree = 0;
+    ecartX = 0;
+    ecartY = 0;
     for(int i=0; i<5; i++)
     {
       while (Serial.available()<1);
-      duree = duree + Serial.read() * pow(10, 5-i) / 10;
+      ecartX = ecartX + Serial.read() * pow(10, 5-i) / 10;
     }
-    startTimestamp = millis();
-    timePos = 0;
-    while(timePos < duree)
+    for(int i=0; i<5; i++)
     {
-      timePos = int((millis() - startTimestamp));
-      long angle = map(timePos, 0, duree, 0, 180);
-      monservo.write(angle);
+      while (Serial.available()<1);
+      ecartY = ecartY + Serial.read() * pow(10, 5-i) / 10;
     }
+    while (Serial.available()<1);
+    invX = Serial.read();
+
+    while (Serial.available()<1);
+    invX = Serial.read();
+    
+    // vitesse = ecart*90/240
+    // temps = dist / vitesse = 90 / ecart * 90 / 240 = 240 / ecart
+    tempsX = 240/ecartX;
+    angleDepX = angleX;
+
+    tempsY = 320/ecartY;
+    angleDepY = angleY;
+    
+    startTimestamp = millis();
 }
               
 void commande_pin_mode() {
