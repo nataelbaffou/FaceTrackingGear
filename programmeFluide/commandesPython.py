@@ -25,6 +25,7 @@ class Arduino():
         self.SERVO_READ = 106
         self.SERVO_ATTACH = 107
         self.MAPPING = 108
+        self.STOP = 109
         self.INPUT = 0
         self.OUTPUT = 1
         self.LOW = 0
@@ -87,6 +88,8 @@ class Arduino():
             self.ser.write(chr(newVal))
         self.ser.write(chr(invX))
         self.ser.write(chr(invY))
-        
+
+    def stop(self):
+        self.ser.write(chr(self.STOP))
  
                 

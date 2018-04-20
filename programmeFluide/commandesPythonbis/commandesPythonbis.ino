@@ -8,6 +8,7 @@
 #define SERVO_READ 106
 #define SERVO_ATTACH 107
 #define MAPPING 108
+#define STOP 109
 
 #include <Servo.h>
 
@@ -24,10 +25,11 @@ long tempsX = 0;
 long tempsY = 0;
 long angleX = 90;
 long angleY = 90;
-long angleDepX = 0;
-long angleDepY = 0;
+long angleDepX = 90;
+long angleDepY = 90;
 int invX = 1;
 int invY = 1;
+int bouger = 1;
               
 void setup() {
   char c;
@@ -48,9 +50,10 @@ void loop() {
      if (commande==MAPPING)commande_mapping();
      else if (commande==SERVO_WRITE) commande_servo_write();
      else if (commande==SERVO_ATTACH) commande_servo_attach();
+     else if (commande==STOP) commande_stop();
      
   }
-  if(0){
+  if(bouger){
       timePos = int((millis() - startTimestamp));
       if(invX == 1){
         angleX = map(timePos, 0, tempsX*1000, angleDepX, angleDepX + 90);
@@ -59,6 +62,7 @@ void loop() {
         angleX = map(timePos, 0, tempsX*1000, angleDepX, angleDepX - 90);
       }
       monservo.write(angleX);
+      
       if(invY == 1){
         angleY = map(timePos, 0, tempsY*1000, angleDepY, angleDepY + 90);
       }
@@ -87,7 +91,7 @@ void commande_mapping() {
     invX = Serial.read();
 
     while (Serial.available()<1);
-    invX = Serial.read();
+    invY = Serial.read();
     
     // vitesse = ecart*90/240
     // temps = dist / vitesse = 90 / ecart * 90 / 240 = 240 / ecart
@@ -163,4 +167,8 @@ void commande_servo_write(){
   if(numeroServo==2) monservo2.write(value);
 }
 
-              
+void commande_stop(){
+  monservo.write(90);
+  monservo2.write(90);
+  bouger = 0;
+}    

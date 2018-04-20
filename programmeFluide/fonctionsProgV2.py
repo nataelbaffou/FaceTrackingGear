@@ -92,6 +92,8 @@ class tracking():
         self.yFaceCen = y + int(h/2)
 
     def calcul_deplacement(self):
+        print(self.yScrCen)
+        print(self.yFaceCen)
         xEcart = abs(self.xScrCen - self.xFaceCen)
         # - self.xScrSaf
         yEcart = abs(self.yScrCen - self.yFaceCen)
@@ -131,6 +133,7 @@ class tracking():
             invX = 0
         if(self.yScrCen < self.yFaceCen):
             invY = 0
+        print("x : {}     y : {}".format(self.xDep, self.yDep))
         self.ard.mapping(self.xDep, self.yDep, invX, invY)
         
 
@@ -160,6 +163,7 @@ class tracking():
             self.writer.write(frame)
     
     def release_all(self):
+        self.stopMotor()
         self.cap.release()
         cv2.destroyAllWindows()
         self.ard.close()
@@ -197,6 +201,9 @@ class tracking():
             return True, ecart
         else:
             return False, None
+
+    def stopMotor(self):
+        self.ard.stop()
     
 
 def admin_mode():
